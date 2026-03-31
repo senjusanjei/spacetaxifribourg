@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpaceTaxi Fribourg</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#0a1628;--deep:#0d1f3c;--blue:#1a3a6b;--accent:#4a9eff;--sky:#7ec8ff;--white:#f0f6ff;--gray:#8a9ab5;--card:rgba(255,255,255,0.04);--border:rgba(74,158,255,0.15); }
+  *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+  body{background:var(--navy);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(1px 1px at 10% 15%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(1px 1px at 25% 60%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 40% 30%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(1px 1px at 55% 80%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 70% 20%,rgba(255,255,255,.8) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 80% 50%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1px 1px at 90% 70%,rgba(255,255,255,.7) 0%,transparent 100%),radial-gradient(2px 2px at 5% 40%,rgba(126,200,255,.4) 0%,transparent 100%),radial-gradient(2px 2px at 95% 35%,rgba(126,200,255,.3) 0%,transparent 100%)}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 5%;background:rgba(10,22,40,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);gap:12px}
+  .nav-logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .nav-logo span{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--white);letter-spacing:-.02em}
+  .nav-links{display:flex;gap:24px;list-style:none}
+  .nav-links a{color:var(--gray);text-decoration:none;font-size:.88rem;font-weight:500;transition:color .2s}
+  .nav-links a:hover{color:var(--accent)}
+  .nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .nav-cta{background:#fff;color:var(--navy);padding:10px 20px;border-radius:100px;font-weight:800;text-decoration:none;font-size:.88rem;transition:all .2s;white-space:nowrap;box-shadow:0 0 20px rgba(255,255,255,.2)}
+  .nav-cta:hover{background:var(--sky);transform:translateY(-1px)}
+  .lang-switcher{display:flex;gap:4px}
+  .lang-btn{background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--gray);padding:6px 10px;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+  .lang-btn:hover{background:rgba(74,158,255,.15);color:var(--accent);border-color:rgba(74,158,255,.4)}
+  .lang-btn.active{background:var(--accent);color:var(--navy);border-color:var(--accent)}
+  .hero{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;padding:0 5%;background:radial-gradient(ellipse 80% 60% at 65% 40%,rgba(26,58,107,.5) 0%,transparent 70%);overflow:hidden}
+  .hero-content{max-width:520px}
+  .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(74,158,255,.12);border:1px solid rgba(74,158,255,.3);padding:6px 16px;border-radius:100px;margin-bottom:22px;font-size:.78rem;color:var(--sky);font-weight:500;letter-spacing:.05em;text-transform:uppercase;animation:fadeUp .6s ease both}
+  .hero-badge::before{content:'✦';font-size:.6rem}
+  .hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,5vw,4.2rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:16px;animation:fadeUp .6s .1s ease both}
+  .hero h1 span{color:var(--accent)}
+  .hero p{font-size:.98rem;color:var(--gray);line-height:1.7;margin-bottom:32px;animation:fadeUp .6s .2s ease both}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;animation:fadeUp .6s .3s ease both}
+  .btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--navy);padding:13px 26px;border-radius:100px;font-weight:700;font-size:.92rem;text-decoration:none;transition:all .25s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+  .btn-primary:hover{background:var(--sky);transform:translateY(-2px);box-shadow:0 12px 32px rgba(74,158,255,.4)}
+  .btn-secondary{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--white);padding:13px 26px;border-radius:100px;font-weight:600;font-size:.92rem;text-decoration:none;border:1.5px solid var(--border);transition:all .25s;cursor:pointer;font-family:'DM Sans',sans-serif}
+  .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+  .booking-float{position:absolute;right:5%;top:50%;transform:translateY(-50%);width:360px;animation:float 4s ease-in-out infinite,fadeUp .7s .2s ease both}
+  .booking-card{background:rgba(13,31,60,.95);border:1px solid rgba(255,255,255,.2);border-radius:24px;padding:18px;backdrop-filter:blur(20px);box-shadow:0 24px 64px rgba(0,0,0,.5)}
+  .booking-card h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:10px}
+  .field-group{margin-bottom:7px}
+  .field-group label{display:block;font-size:.68rem;color:rgba(255,255,255,.8);margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+  .field-group input,.field-group select{width:100%;padding:9px 12px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:10px;color:#fff;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:all .2s}
+  .field-group input:focus,.field-group select:focus{border-color:var(--accent);background:rgba(74,158,255,.2)}
+  .field-group input::placeholder{color:rgba(255,255,255,.5)}
+  .field-group select{color:#fff}
+  .field-group select option{background:#0d1f3c;color:#fff}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .booking-card .btn-primary{width:100%;justify-content:center;margin-top:4px;font-size:.86rem;padding:11px}
+  .price-estimate{margin-top:8px;padding:9px 14px;background:rgba(74,158,255,.08);border-radius:10px;border:1px solid rgba(74,158,255,.2);display:flex;justify-content:space-between;align-items:center}
+  .price-estimate span{font-size:.76rem;color:var(--gray)}
+  .price-estimate strong{color:var(--accent);font-size:.98rem}
+  .phone-strip{position:relative;z-index:1;background:linear-gradient(135deg,var(--blue),#0d2d5e);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:24px 5%;display:flex;align-items:center;justify-content:center;gap:36px;flex-wrap:wrap}
+  .phone-strip .label{color:var(--sky);font-size:.88rem;font-weight:500}
+  .phone-strip a{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--white);text-decoration:none;transition:color .2s}
+  .phone-strip a:hover{color:var(--accent)}
+  .phone-strip .available{display:flex;align-items:center;gap:8px;color:#4ade80;font-size:.85rem;font-weight:500}
+  .dot-green{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;animation:pulse 2s infinite}
+  section{position:relative;z-index:1}
+  .services{padding:80px 5%;background:radial-gradient(ellipse 50% 50% at 20% 60%,rgba(26,58,107,.3) 0%,transparent 70%)}
+  .section-label{font-size:.72rem;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px}
+  .section-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-.03em;margin-bottom:12px}
+  .section-sub{color:var(--gray);font-size:.98rem;max-width:500px;line-height:1.7;margin-bottom:44px}
+  .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+  .service-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:22px;transition:all .3s}
+  .service-card:hover{border-color:rgba(74,158,255,.4);background:rgba(74,158,255,.06);transform:translateY(-4px)}
+  .service-icon{width:46px;height:46px;border-radius:12px;background:rgba(74,158,255,.12);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:14px}
+  .service-card h4{font-family:'Syne',sans-serif;font-size:.98rem;font-weight:700;margin-bottom:7px}
+  .service-card p{font-size:.84rem;color:var(--gray);line-height:1.6}
+  .how{padding:80px 5%;background:rgba(13,31,60,.4)}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;margin-top:44px;position:relative}
+  .steps::before{content:'';position:absolute;top:28px;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--border),var(--border),transparent)}
+  .step{text-align:center;padding:0 14px}
+  .step-num{width:56px;height:56px;border-radius:50%;background:var(--navy);border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--accent);margin:0 auto 16px;position:relative;z-index:2}
+  .step h4{font-family:'Syne',sans-serif;font-size:.98rem;font-weight:700;margin-bottom:7px}
+  .step p{font-size:.84rem;color:var(--gray);line-height:1.6}
+  .zones{padding:80px 5%}
+  .zones-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px}
+  .zone-tag{padding:8px 16px;background:var(--card);border:1px solid var(--border);border-radius:100px;font-size:.84rem;color:var(--gray);transition:all .2s}
+  .zone-tag:hover,.zone-tag.active{background:rgba(74,158,255,.12);border-color:rgba(74,158,255,.4);color:var(--accent)}
+  .stats{padding:64px 5%;background:linear-gradient(135deg,rgba(26,58,107,.4),rgba(10,22,40,.8));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:32px;text-align:center}
+  .stat-num{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--accent);letter-spacing:-.03em;line-height:1}
+  .stat-label{font-size:.84rem;color:var(--gray);margin-top:6px}
+  .testimonials{padding:80px 5%}
+  .google-rating-block{margin-top:44px;background:var(--card);border:1px solid var(--border);border-radius:24px;padding:36px;display:flex;flex-direction:column;align-items:center;gap:24px}
+  .google-big-score{display:flex;gap:50px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .google-score-left{text-align:center}
+  .google-num{font-family:'Syne',sans-serif;font-size:4.5rem;font-weight:800;color:var(--white);line-height:1}
+  .google-stars{color:#fbbf24;font-size:1.3rem;margin:5px 0}
+  .google-count{font-size:.84rem;color:var(--gray)}
+  .google-score-right{display:flex;flex-direction:column;gap:8px;min-width:220px}
+  .google-bar{display:flex;align-items:center;gap:10px}
+  .bar-label{font-size:.76rem;color:var(--gray);width:22px;text-align:right}
+  .bar-track{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:100px;overflow:hidden}
+  .bar-fill{height:100%;background:#fbbf24;border-radius:100px}
+  .bar-pct{font-size:.74rem;color:var(--gray);width:28px}
+  .google-cta-btn{display:inline-flex;align-items:center;gap:10px;background:var(--white);color:#1a1a1a;padding:13px 26px;border-radius:100px;font-weight:700;font-size:.92rem;text-decoration:none;transition:all .2s}
+  .google-cta-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,255,255,.15)}
+  .app-section{padding:80px 5%;display:flex;align-items:center;gap:50px;flex-wrap:wrap;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(26,58,107,.35) 0%,transparent 70%)}
+  .app-content{flex:1;min-width:260px}
+  .app-content h2{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.5rem);font-weight:800;letter-spacing:-.03em;margin-bottom:12px}
+  .app-content p{color:var(--gray);line-height:1.7;margin-bottom:26px}
+  .app-buttons{display:flex;gap:12px;flex-wrap:wrap}
+  .app-btn{display:inline-flex;align-items:center;gap:12px;background:rgba(255,255,255,.07);border:1px solid var(--border);padding:12px 18px;border-radius:14px;color:var(--white);text-decoration:none;transition:all .2s}
+  .app-btn:hover{background:rgba(74,158,255,.1);border-color:rgba(74,158,255,.4)}
+  .app-icon{font-size:1.5rem}
+  .app-text{line-height:1.2}
+  .app-text small{font-size:.68rem;color:var(--gray);display:block}
+  .app-text strong{font-size:.92rem;font-weight:600}
+  .app-phone{flex:0 0 240px;display:flex;justify-content:center}
+  .phone-mockup{width:210px;height:420px;background:rgba(13,31,60,.8);border:1.5px solid var(--border);border-radius:36px;padding:14px;box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 40px rgba(74,158,255,.1);position:relative;overflow:hidden}
+  .phone-mockup::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:66px;height:20px;background:var(--navy);border-radius:0 0 14px 14px}
+  .phone-screen{width:100%;height:100%;border-radius:24px;background:radial-gradient(ellipse at 50% 30%,rgba(74,158,255,.2) 0%,var(--navy) 60%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;padding:16px}
+  .phone-planet{width:68px;height:68px;background:radial-gradient(circle at 38% 38%,#4a9eff,#1a3a6b 60%,#0a1628);border-radius:50%;box-shadow:0 0 30px rgba(74,158,255,.5);position:relative}
+  .phone-planet::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-25deg);width:100px;height:19px;border:2px solid rgba(126,200,255,.6);border-radius:50%}
+  .phone-title{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;text-align:center}
+  .phone-num{color:var(--accent);font-weight:600;font-size:.8rem}
+  .phone-btn{background:var(--accent);color:var(--navy);padding:8px 18px;border-radius:100px;font-weight:700;font-size:.8rem;width:100%;text-align:center}
+  footer{background:var(--deep);border-top:1px solid var(--border);padding:52px 5% 26px}
+  .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;margin-bottom:40px}
+  .footer-brand p{font-size:.84rem;color:var(--gray);line-height:1.7;margin-top:10px;max-width:250px}
+  .footer-col h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:12px;color:var(--white)}
+  .footer-col ul{list-style:none}
+  .footer-col ul li{margin-bottom:8px}
+  .footer-col ul li a{color:var(--gray);text-decoration:none;font-size:.84rem;transition:color .2s}
+  .footer-col ul li a:hover{color:var(--accent)}
+  .footer-bottom{border-top:1px solid var(--border);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  .footer-bottom p{font-size:.76rem;color:var(--gray)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+  @keyframes float{0%,100%{transform:translateY(-50%) translateY(0)}50%{transform:translateY(-50%) translateY(-10px)}}
+  @media(max-width:900px){.booking-float{position:static;transform:none;animation:fadeUp .7s .4s ease both;width:100%;margin-top:32px}.hero{flex-direction:column;padding-top:100px;padding-bottom:44px}.nav-links{display:none}.footer-top{grid-template-columns:1fr 1fr}.steps::before{display:none}.app-section{flex-direction:column}.app-phone{order:-1}}
+  @media(max-width:480px){.footer-top{grid-template-columns:1fr}.hero h1{font-size:2.1rem}.nav-cta{padding:8px 12px;font-size:.8rem}}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<nav>
+  <div class="nav-logo">
+    <img src="logo.png" alt="SpaceTaxi" style="height:40px;width:auto;filter:drop-shadow(0 0 8px rgba(74,158,255,0.5));">
+    <span>SpaceTaxi</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services" data-i18n="nav_services">Services</a></li>
+    <li><a href="#comment" data-i18n="nav_how">Comment ca marche</a></li>
+    <li><a href="#zones" data-i18n="nav_zones">Zones</a></li>
+    <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn" onclick="setLang('de')">DE</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="tel:0798012242" class="nav-cta">&#128222; 079 801 22 42</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge" data-i18n="badge">Disponible 24h/24 · Fribourg &amp; region</div>
+    <h1><span data-i18n="hero_title">Votre taxi,</span><br><span data-i18n="hero_title2" style="color:var(--accent)">en orbite.</span></h1>
+    <p data-i18n="hero_sub">Rapide, fiable et confortable. SpaceTaxi vous emmene partout dans Fribourg et sa region.</p>
+    <div class="hero-actions">
+      <a href="tel:0798012242" class="btn-primary" data-i18n="btn_book">&#128640; Reserver maintenant</a>
+      <a href="#services" class="btn-secondary" data-i18n="btn_services">Voir les services &rarr;</a>
+    </div>
+  </div>
+  <div class="booking-float">
+    <div class="booking-card">
+      <h3 data-i18n="form_title">&#10022; Demande de course</h3>
+      <div class="field-group"><label data-i18n="form_from">Adresse de depart</label><input type="text" data-i18n-ph="form_from_ph" placeholder="Ex: Gare de Fribourg"></div>
+      <div class="field-group"><label data-i18n="form_to">Destination</label><input type="text" data-i18n-ph="form_to_ph" placeholder="Ex: Aeroport de Geneve"></div>
+      <div class="field-row">
+        <div class="field-group"><label data-i18n="form_date">Date</label><input type="date"></div>
+        <div class="field-group"><label data-i18n="form_time">Heure</label><input type="time"></div>
+      </div>
+      <div class="field-group"><label data-i18n="form_vehicle">Type de vehicule</label><select><option>Tesla Model Y</option></select></div>
+      <div class="field-group"><label data-i18n="form_phone">Votre numero</label><input type="tel" placeholder="079 000 00 00"></div>
+      <button class="btn-primary" onclick="window.location='tel:0798012242'" data-i18n="form_confirm">&#128640; Confirmer la course</button>
+      <div class="price-estimate"><span data-i18n="form_price">Estimation tarifaire</span><strong data-i18n="form_price_val">Sur demande</strong></div>
+    </div>
+  </div>
+</section>
+
+<div class="phone-strip">
+  <span class="label" data-i18n="strip_label">Reservation directe</span>
+  <a href="tel:0798012242">079 801 22 42</a>
+  <div class="available"><span class="dot-green"></span><span data-i18n="strip_available">Disponible maintenant</span></div>
+</div>
+
+<section class="services" id="services">
+  <div class="section-label" data-i18n="serv_label">Nos services</div>
+  <h2 class="section-title" data-i18n="serv_title">Tout ce dont vous avez besoin</h2>
+  <p class="section-sub" data-i18n="serv_sub">De la course locale au transfert aeroport, SpaceTaxi s'adapte a chaque besoin.</p>
+  <div class="services-grid">
+    <div class="service-card"><div class="service-icon">&#9992;&#65039;</div><h4 data-i18n="s1_title">Transferts aeroport</h4><p data-i18n="s1_desc">Geneve, Zurich, Bale. Vol suivi en temps reel.</p></div>
+    <div class="service-card"><div class="service-icon">&#128649;</div><h4 data-i18n="s2_title">Gare &amp; trains</h4><p data-i18n="s2_desc">Arrivee ou depart depuis la gare de Fribourg. Ponctuel, sans stress.</p></div>
+    <div class="service-card"><div class="service-icon">&#127973;</div><h4 data-i18n="s3_title">Courses medicales</h4><p data-i18n="s3_desc">Hopital cantonal, cliniques, rendez-vous medicaux.</p></div>
+    <div class="service-card"><div class="service-icon">&#127881;</div><h4 data-i18n="s4_title">Evenements &amp; sorties</h4><p data-i18n="s4_desc">Mariage, soiree, conference. Rentrez en securite.</p></div>
+    <div class="service-card"><div class="service-icon">&#128084;</div><h4 data-i18n="s5_title">Affaires &amp; corporate</h4><p data-i18n="s5_desc">Mise a disposition avec chauffeur pour vos deplacements professionnels.</p></div>
+    <div class="service-card"><div class="service-icon">&#127769;</div><h4 data-i18n="s6_title">Service 24h/24</h4><p data-i18n="s6_desc">Disponible jour et nuit, week-ends et jours feries inclus.</p></div>
+  </div>
+</section>
+
+<section class="how" id="comment">
+  <div style="max-width:600px">
+    <div class="section-label" data-i18n="how_label">Comment ca marche</div>
+    <h2 class="section-title" data-i18n="how_title">3 etapes, c'est tout.</h2>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h4 data-i18n="step1_title">Appelez ou reservez</h4><p data-i18n="step1_desc">Par telephone, WhatsApp ou via ce site.</p></div>
+    <div class="step"><div class="step-num">2</div><h4 data-i18n="step2_title">Confirmation immediate</h4><p data-i18n="step2_desc">Vous recevez une confirmation et le numero de votre chauffeur.</p></div>
+    <div class="step"><div class="step-num">3</div><h4 data-i18n="step3_title">A bord !</h4><p data-i18n="step3_desc">Votre chauffeur vous attend a l'heure convenue.</p></div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stats-grid">
+    <div><div class="stat-num">2000+</div><div class="stat-label" data-i18n="stat1">Courses realisees</div></div>
+    <div><div class="stat-num">24/7</div><div class="stat-label" data-i18n="stat2">Disponibilite</div></div>
+    <div><div class="stat-num">5.0&#9733;</div><div class="stat-label" data-i18n="stat3">Note Google (37 avis)</div></div>
+    <div><div class="stat-num">15 min</div><div class="stat-label" data-i18n="stat4">Temps d'attente moyen</div></div>
+  </div>
+</section>
+
+<section class="zones" id="zones">
+  <div class="section-label" data-i18n="zones_label">Zones desservies</div>
+  <h2 class="section-title" data-i18n="zones_title">Fribourg et bien au-dela</h2>
+  <p class="section-sub" data-i18n="zones_sub">SpaceTaxi opere dans toute l'agglomeration fribourgeoise et effectue des transferts longue distance.</p>
+  <div class="zones-grid">
+    <div class="zone-tag active">&#128205; Fribourg</div><div class="zone-tag">Bulle</div><div class="zone-tag">Romont</div>
+    <div class="zone-tag">Murten / Morat</div><div class="zone-tag">Villars-sur-Glane</div><div class="zone-tag">Givisiez</div>
+    <div class="zone-tag">Marly</div><div class="zone-tag">Dudingen</div><div class="zone-tag">Berne</div>
+    <div class="zone-tag">Lausanne</div><div class="zone-tag">Geneve &#9992;&#65039;</div><div class="zone-tag">Zurich &#9992;&#65039;</div>
+    <div class="zone-tag">Bale &#9992;&#65039;</div><div class="zone-tag">Interlaken</div><div class="zone-tag" data-i18n="zone_all">+ toute la Suisse</div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="section-label" data-i18n="rev_label">Avis clients</div>
+  <h2 class="section-title" data-i18n="rev_title">Ils nous font confiance</h2>
+  <div class="google-rating-block">
+    <div class="google-big-score">
+      <div class="google-score-left">
+        <div class="google-num">5.0</div>
+        <div class="google-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="google-count" data-i18n="rev_count">37 avis Google</div>
+      </div>
+      <div class="google-score-right">
+        <div class="google-bar"><span class="bar-label">5&#9733;</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-pct">100%</span></div>
+        <div class="google-bar"><span class="bar-label">4&#9733;</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-pct">0%</span></div>
+        <div class="google-bar"><span class="bar-label">3&#9733;</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-pct">0%</span></div>
+        <div class="google-bar"><span class="bar-label">2&#9733;</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-pct">0%</span></div>
+        <div class="google-bar"><span class="bar-label">1&#9733;</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-pct">0%</span></div>
+      </div>
+    </div>
+    <a href="https://maps.app.goo.gl/B7uMpwNcdDWLcPnEA" target="_blank" class="google-cta-btn">
+      <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 2.9l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z" fill="#FFC107"/><path d="M6.3 14.7l6.6 4.8C14.5 16.1 19 13 24 13c3.1 0 5.8 1.1 8 2.9l5.7-5.7C34.5 6.5 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" fill="#FF3D00"/><path d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.1 35.5 26.6 36 24 36c-5.2 0-9.6-3.3-11.3-8H6.3C9.7 35.6 16.3 44 24 44z" fill="#4CAF50"/><path d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37.2 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z" fill="#1976D2"/></svg>
+      <span data-i18n="rev_btn">Voir tous les avis sur Google</span>
+    </a>
+  </div>
+</section>
+
+<section class="app-section" id="contact">
+  <div class="app-content">
+    <div class="section-label" data-i18n="contact_label">Reserver facilement</div>
+    <h2 data-i18n="contact_title">Via WhatsApp ou par telephone</h2>
+    <p data-i18n="contact_sub">Pas d'app a telecharger. Contactez-nous directement — reponse garantie en quelques minutes.</p>
+    <div class="app-buttons">
+      <a href="https://wa.me/41798012242" class="app-btn"><span class="app-icon">&#128172;</span><div class="app-text"><small data-i18n="wa_small">Ecrire sur</small><strong>WhatsApp</strong></div></a>
+      <a href="tel:0798012242" class="app-btn"><span class="app-icon">&#128222;</span><div class="app-text"><small data-i18n="call_small">Appeler directement</small><strong>079 801 22 42</strong></div></a>
+    </div>
+  </div>
+  <div class="app-phone">
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="phone-planet"></div>
+        <div class="phone-title">SpaceTaxi<br>Fribourg</div>
+        <div class="phone-num">079 801 22 42</div>
+        <div class="phone-btn" data-i18n="btn_book2">&#128640; Reserver</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="nav-logo">
+        <img src="logo.png" alt="SpaceTaxi" style="height:36px;width:auto;filter:drop-shadow(0 0 8px rgba(74,158,255,0.5));">
+        <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem">SpaceTaxi</span>
+      </div>
+      <p data-i18n="footer_desc">Votre service de taxi de confiance a Fribourg. Disponible 24h/24, 7j/7.</p>
+    </div>
+    <div class="footer-col">
+      <h5 data-i18n="nav_services">Services</h5>
+      <ul><li><a href="#" data-i18n="s1_title">Transferts aeroport</a></li><li><a href="#" data-i18n="s3_title">Courses medicales</a></li><li><a href="#" data-i18n="s4_title">Evenements</a></li><li><a href="#" data-i18n="s5_title">Corporate</a></li></ul>
+    </div>
+    <div class="footer-col">
+      <h5 data-i18n="nav_zones">Zones</h5>
+      <ul><li><a href="#">Fribourg</a></li><li><a href="#">Bulle</a></li><li><a href="#">Berne</a></li><li><a href="#">Geneve</a></li></ul>
+    </div>
+    <div class="footer-col">
+      <h5 data-i18n="nav_contact">Contact</h5>
+      <ul><li><a href="tel:0798012242">079 801 22 42</a></li><li><a href="https://wa.me/41798012242">WhatsApp</a></li><li><a href="#">Rte de Chantemerle 25, 1763 Granges-Paccot</a></li></ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&#169; 2026 SpaceTaxi Fribourg. <span data-i18n="footer_rights">Tous droits reserves.</span></p>
+    <p style="color:var(--gray);font-size:.78rem">Concu avec &#10022; pour Fribourg</p>
+  </div>
+</footer>
+
+<script>
+const T={
+  fr:{nav_services:"Services",nav_how:"Comment \u00e7a marche",nav_zones:"Zones",nav_contact:"Contact",badge:"Disponible 24h/24 \u00b7 Fribourg & r\u00e9gion",hero_title:"Votre taxi,",hero_title2:"en orbite.",hero_sub:"Rapide, fiable et confortable. SpaceTaxi vous emm\u00e8ne partout dans Fribourg et sa r\u00e9gion \u2014 a\u00e9roport, gare, \u00e9v\u00e9nements, courses m\u00e9dicales.",btn_book:"\uD83D\uDE80 R\u00e9server maintenant",btn_book2:"\uD83D\uDE80 R\u00e9server",btn_services:"Voir les services \u2192",form_title:"\u2726 Demande de course",form_from:"Adresse de d\u00e9part",form_from_ph:"Ex: Gare de Fribourg",form_to:"Destination",form_to_ph:"Ex: A\u00e9roport de Gen\u00e8ve",form_date:"Date",form_time:"Heure",form_vehicle:"Type de v\u00e9hicule",form_phone:"Votre num\u00e9ro",form_confirm:"\uD83D\uDE80 Confirmer la course",form_price:"Estimation tarifaire",form_price_val:"Sur demande",strip_label:"R\u00e9servation directe",strip_available:"Disponible maintenant",serv_label:"Nos services",serv_title:"Tout ce dont vous avez besoin",serv_sub:"De la course locale au transfert a\u00e9roport, SpaceTaxi s'adapte \u00e0 chaque besoin avec professionnalisme.",s1_title:"Transferts a\u00e9roport",s1_desc:"Gen\u00e8ve, Zurich, B\u00e2le. On suit votre vol en temps r\u00e9el.",s2_title:"Gare & trains",s2_desc:"Arriv\u00e9e ou d\u00e9part depuis la gare de Fribourg. Ponctuel, sans stress.",s3_title:"Courses m\u00e9dicales",s3_desc:"H\u00f4pital cantonal, cliniques, rendez-vous m\u00e9dicaux.",s4_title:"\u00c9v\u00e9nements & sorties",s4_desc:"Mariage, soir\u00e9e, conf\u00e9rence. Rentrez en toute s\u00e9curit\u00e9.",s5_title:"Affaires & corporate",s5_desc:"Mise \u00e0 disposition avec chauffeur pour vos d\u00e9placements professionnels.",s6_title:"Service 24h/24",s6_desc:"Disponible jour et nuit, week-ends et jours f\u00e9ri\u00e9s inclus.",how_label:"Comment \u00e7a marche",how_title:"3 \u00e9tapes, c'est tout.",step1_title:"Appelez ou r\u00e9servez",step1_desc:"Par t\u00e9l\u00e9phone, WhatsApp ou via ce site.",step2_title:"Confirmation imm\u00e9diate",step2_desc:"Vous recevez une confirmation et le num\u00e9ro de votre chauffeur.",step3_title:"\u00c0 bord !",step3_desc:"Votre chauffeur vous attend \u00e0 l'heure convenue.",stat1:"Courses r\u00e9alis\u00e9es",stat2:"Disponibilit\u00e9",stat3:"Note Google (37 avis)",stat4:"Temps d'attente moyen",zones_label:"Zones desservies",zones_title:"Fribourg et bien au-del\u00e0",zones_sub:"SpaceTaxi op\u00e8re dans toute l'agglom\u00e9ration fribourgeoise et effectue des transferts longue distance.",zone_all:"+ toute la Suisse",rev_label:"Avis clients",rev_title:"Ils nous font confiance",rev_count:"37 avis Google",rev_btn:"Voir tous les avis sur Google",contact_label:"R\u00e9server facilement",contact_title:"Via WhatsApp ou par t\u00e9l\u00e9phone",contact_sub:"Pas d'app \u00e0 t\u00e9l\u00e9charger. Contactez-nous directement \u2014 r\u00e9ponse garantie en quelques minutes.",wa_small:"\u00c9crire sur",call_small:"Appeler directement",footer_desc:"Votre service de taxi de confiance \u00e0 Fribourg. Disponible 24h/24, 7j/7.",footer_rights:"Tous droits r\u00e9serv\u00e9s."},
+  de:{nav_services:"Dienstleistungen",nav_how:"So funktioniert's",nav_zones:"Zonen",nav_contact:"Kontakt",badge:"Verf\u00fcgbar 24/7 \u00b7 Freiburg & Region",hero_title:"Ihr Taxi,",hero_title2:"auf Orbit.",hero_sub:"Schnell, zuverl\u00e4ssig und komfortabel. SpaceTaxi bringt Sie \u00fcberall hin in Freiburg \u2014 Flughafen, Bahnhof, Events, medizinische Fahrten.",btn_book:"\uD83D\uDE80 Jetzt buchen",btn_book2:"\uD83D\uDE80 Buchen",btn_services:"Dienstleistungen \u2192",form_title:"\u2726 Fahrtanfrage",form_from:"Abfahrtsadresse",form_from_ph:"z.B. Bahnhof Freiburg",form_to:"Zielort",form_to_ph:"z.B. Flughafen Genf",form_date:"Datum",form_time:"Uhrzeit",form_vehicle:"Fahrzeugtyp",form_phone:"Ihre Nummer",form_confirm:"\uD83D\uDE80 Fahrt best\u00e4tigen",form_price:"Preissch\u00e4tzung",form_price_val:"Auf Anfrage",strip_label:"Direktbuchung",strip_available:"Jetzt verf\u00fcgbar",serv_label:"Unsere Dienste",serv_title:"Alles was Sie brauchen",serv_sub:"Vom lokalen Transfer bis zum Flughafen \u2014 SpaceTaxi passt sich professionell an jeden Bedarf an.",s1_title:"Flughafentransfer",s1_desc:"Genf, Z\u00fcrich, Basel. Wir verfolgen Ihren Flug in Echtzeit.",s2_title:"Bahnhof & Z\u00fcge",s2_desc:"Ankunft oder Abfahrt am Bahnhof Freiburg. P\u00fcnktlich, stressfrei.",s3_title:"Medizinische Fahrten",s3_desc:"Kantonsspital, Kliniken, Arzttermine. Sanfte Fahrweise.",s4_title:"Events & Ausfluege",s4_desc:"Hochzeit, Abend, Konferenz. Kommen Sie sicher nach Hause.",s5_title:"Business & Corporate",s5_desc:"Fahrer auf Abruf f\u00fcr Ihre Gesch\u00e4ftsreisen.",s6_title:"24/7 Service",s6_desc:"Tag und Nacht verf\u00fcgbar, auch an Wochenenden und Feiertagen.",how_label:"So funktioniert's",how_title:"3 Schritte, das war's.",step1_title:"Anrufen oder buchen",step1_desc:"Per Telefon, WhatsApp oder \u00fcber diese Website.",step2_title:"Sofortige Best\u00e4tigung",step2_desc:"Sie erhalten eine Best\u00e4tigung und die Nummer Ihres Fahrers.",step3_title:"An Bord!",step3_desc:"Ihr Fahrer wartet zur vereinbarten Zeit.",stat1:"Fahrten durchgef\u00fchrt",stat2:"Verf\u00fcgbarkeit",stat3:"Google-Bewertung (37)",stat4:"Durchschnittliche Wartezeit",zones_label:"Bediente Zonen",zones_title:"Freiburg und weit dar\u00fcber hinaus",zones_sub:"SpaceTaxi ist in der gesamten Agglomeration Freiburg t\u00e4tig.",zone_all:"+ ganze Schweiz",rev_label:"Kundenbewertungen",rev_title:"Sie vertrauen uns",rev_count:"37 Google-Bewertungen",rev_btn:"Alle Bewertungen auf Google",contact_label:"Einfach buchen",contact_title:"Via WhatsApp oder Telefon",contact_sub:"Keine App n\u00f6tig. Kontaktieren Sie uns direkt \u2014 Antwort in wenigen Minuten.",wa_small:"Schreiben auf",call_small:"Direkt anrufen",footer_desc:"Ihr zuverl\u00e4ssiger Taxiservice in Freiburg. 24/7 verf\u00fcgbar.",footer_rights:"Alle Rechte vorbehalten."},
+  en:{nav_services:"Services",nav_how:"How it works",nav_zones:"Zones",nav_contact:"Contact",badge:"Available 24/7 \u00b7 Fribourg & region",hero_title:"Your taxi,",hero_title2:"in orbit.",hero_sub:"Fast, reliable and comfortable. SpaceTaxi takes you anywhere in Fribourg \u2014 airport, station, events, medical trips.",btn_book:"\uD83D\uDE80 Book now",btn_book2:"\uD83D\uDE80 Book",btn_services:"See services \u2192",form_title:"\u2726 Ride request",form_from:"Pickup address",form_from_ph:"e.g. Fribourg Station",form_to:"Destination",form_to_ph:"e.g. Geneva Airport",form_date:"Date",form_time:"Time",form_vehicle:"Vehicle type",form_phone:"Your number",form_confirm:"\uD83D\uDE80 Confirm ride",form_price:"Price estimate",form_price_val:"On request",strip_label:"Direct booking",strip_available:"Available now",serv_label:"Our services",serv_title:"Everything you need",serv_sub:"From local rides to airport transfers, SpaceTaxi adapts to every need professionally.",s1_title:"Airport transfers",s1_desc:"Geneva, Zurich, Basel. We track your flight in real time.",s2_title:"Station & trains",s2_desc:"Arrivals or departures from Fribourg station. Punctual, stress-free.",s3_title:"Medical trips",s3_desc:"Cantonal hospital, clinics, medical appointments.",s4_title:"Events & outings",s4_desc:"Wedding, evening out, conference. Get home safely.",s5_title:"Business & corporate",s5_desc:"Driver on demand for your professional trips.",s6_title:"24/7 service",s6_desc:"Available day and night, weekends and holidays included.",how_label:"How it works",how_title:"3 steps, that's it.",step1_title:"Call or book",step1_desc:"By phone, WhatsApp or via this site.",step2_title:"Instant confirmation",step2_desc:"You receive a confirmation and your driver's number.",step3_title:"All aboard!",step3_desc:"Your driver waits at the agreed time.",stat1:"Rides completed",stat2:"Availability",stat3:"Google rating (37 reviews)",stat4:"Average wait time",zones_label:"Service zones",zones_title:"Fribourg and far beyond",zones_sub:"SpaceTaxi operates throughout the Fribourg area and carries out long-distance transfers.",zone_all:"+ all of Switzerland",rev_label:"Customer reviews",rev_title:"They trust us",rev_count:"37 Google reviews",rev_btn:"See all reviews on Google",contact_label:"Book easily",contact_title:"Via WhatsApp or phone",contact_sub:"No app to download. Contact us directly \u2014 reply guaranteed in minutes.",wa_small:"Write on",call_small:"Call directly",footer_desc:"Your trusted taxi service in Fribourg. Available 24/7 for all your journeys.",footer_rights:"All rights reserved."}
+};
+function setLang(l){
+  const t=T[l];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(t[k]!==undefined)el.innerHTML=t[k];});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.getAttribute('data-i18n-ph');if(t[k]!==undefined)el.placeholder=t[k];});
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===l.toUpperCase()));
+  document.documentElement.lang=l;
+}
+</script>
+</body>
+</html>
