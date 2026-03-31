@@ -1,131 +1,858 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px}
-    span.s1 {font-kerning: none}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpaceTaxi Fribourg – Votre taxi, en orbite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --deep: #0d1f3c;
+    --blue: #1a3a6b;
+    --accent: #4a9eff;
+    --sky: #7ec8ff;
+    --white: #f0f6ff;
+    --gray: #8a9ab5;
+    --card: rgba(255,255,255,0.04);
+    --border: rgba(74,158,255,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ─── STARS ─── */
+  .stars {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 60%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 40% 30%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 20%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 80% 50%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 45%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 75%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 10%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(2px 2px at 5% 40%, rgba(126,200,255,0.4) 0%, transparent 100%),
+      radial-gradient(2px 2px at 95% 35%, rgba(126,200,255,0.3) 0%, transparent 100%);
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 5%;
+    background: rgba(10,22,40,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .nav-logo .planet-icon {
+    width: 38px; height: 38px;
+    background: radial-gradient(circle at 38% 38%, #4a9eff, #1a3a6b 60%, #0a1628);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 18px rgba(74,158,255,0.5);
+  }
+  .nav-logo .planet-icon::after {
+    content: '';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    width: 56px; height: 12px;
+    border: 2px solid rgba(126,200,255,0.7);
+    border-radius: 50%;
+  }
+  .nav-logo span {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.25rem;
+    color: var(--white);
+    letter-spacing: -0.02em;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: var(--gray); text-decoration: none; font-size: 0.9rem;
+    font-weight: 500; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    background: var(--accent); color: var(--navy);
+    padding: 10px 24px; border-radius: 100px;
+    font-weight: 700; text-decoration: none; font-size: 0.9rem;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--sky); transform: translateY(-1px); }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 0 5%;
+    background: radial-gradient(ellipse 80% 60% at 65% 40%, rgba(26,58,107,0.5) 0%, transparent 70%);
+    overflow: hidden;
+  }
+
+  .hero-content { max-width: 580px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(74,158,255,0.12); border: 1px solid rgba(74,158,255,0.3);
+    padding: 6px 16px; border-radius: 100px; margin-bottom: 28px;
+    font-size: 0.8rem; color: var(--sky); font-weight: 500; letter-spacing: 0.05em;
+    text-transform: uppercase;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-badge::before { content: '✦'; font-size: 0.6rem; }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: clamp(2.8rem, 6vw, 5rem);
+    line-height: 1.05; letter-spacing: -0.03em;
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero h1 span { color: var(--accent); }
+
+  .hero p {
+    font-size: 1.1rem; color: var(--gray); line-height: 1.7;
+    margin-bottom: 40px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 14px; flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: var(--navy);
+    padding: 16px 32px; border-radius: 100px;
+    font-weight: 700; font-size: 1rem; text-decoration: none;
+    transition: all 0.25s; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary:hover {
+    background: var(--sky); transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(74,158,255,0.4);
+  }
+
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; color: var(--white);
+    padding: 16px 32px; border-radius: 100px;
+    font-weight: 600; font-size: 1rem; text-decoration: none;
+    border: 1.5px solid var(--border); transition: all 0.25s; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ─── BOOKING CARD ─── */
+  .booking-float {
+    position: absolute; right: 5%; top: 50%;
+    transform: translateY(-50%);
+    width: 360px;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+  .booking-card {
+    background: rgba(13,31,60,0.9);
+    border: 1px solid var(--border);
+    border-radius: 24px; padding: 28px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  }
+  .booking-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem; font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .field-group { margin-bottom: 14px; }
+  .field-group label {
+    display: block; font-size: 0.75rem; color: var(--gray);
+    margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+  .field-group input, .field-group select {
+    width: 100%; padding: 13px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border); border-radius: 12px;
+    color: var(--white); font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; outline: none; transition: border-color 0.2s;
+  }
+  .field-group input:focus, .field-group select:focus {
+    border-color: var(--accent);
+    background: rgba(74,158,255,0.07);
+  }
+  .field-group input::placeholder { color: var(--gray); }
+  .field-group select option { background: var(--deep); }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .booking-card .btn-primary {
+    width: 100%; justify-content: center;
+    margin-top: 6px; font-size: 0.95rem; padding: 14px;
+  }
+
+  .price-estimate {
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: rgba(74,158,255,0.08);
+    border-radius: 10px; border: 1px solid rgba(74,158,255,0.2);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .price-estimate span { font-size: 0.8rem; color: var(--gray); }
+  .price-estimate strong { color: var(--accent); font-size: 1.05rem; }
+
+  /* ─── PHONE STRIP ─── */
+  .phone-strip {
+    position: relative; z-index: 1;
+    background: linear-gradient(135deg, var(--blue), #0d2d5e);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 5%;
+    display: flex; align-items: center; justify-content: center; gap: 40px;
+    flex-wrap: wrap;
+  }
+  .phone-strip .label { color: var(--sky); font-size: 0.9rem; font-weight: 500; }
+  .phone-strip a {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.2rem; font-weight: 800;
+    color: var(--white); text-decoration: none;
+    letter-spacing: -0.02em; transition: color 0.2s;
+  }
+  .phone-strip a:hover { color: var(--accent); }
+  .phone-strip .available {
+    display: flex; align-items: center; gap: 8px;
+    color: #4ade80; font-size: 0.85rem; font-weight: 500;
+  }
+  .dot-green {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 8px #4ade80;
+    animation: pulse 2s infinite;
+  }
+
+  /* ─── SERVICES ─── */
+  section { position: relative; z-index: 1; }
+
+  .services {
+    padding: 100px 5%;
+    background: radial-gradient(ellipse 50% 50% at 20% 60%, rgba(26,58,107,0.3) 0%, transparent 70%);
+  }
+  .section-label {
+    font-size: 0.75rem; color: var(--accent); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem); font-weight: 800;
+    letter-spacing: -0.03em; margin-bottom: 16px;
+  }
+  .section-sub { color: var(--gray); font-size: 1rem; max-width: 500px; line-height: 1.7; margin-bottom: 60px; }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+  .service-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 28px;
+    transition: all 0.3s; cursor: default;
+  }
+  .service-card:hover {
+    border-color: rgba(74,158,255,0.4);
+    background: rgba(74,158,255,0.06);
+    transform: translateY(-4px);
+  }
+  .service-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: rgba(74,158,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; margin-bottom: 18px;
+  }
+  .service-card h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;
+  }
+  .service-card p { font-size: 0.88rem; color: var(--gray); line-height: 1.6; }
+
+  /* ─── HOW IT WORKS ─── */
+  .how {
+    padding: 100px 5%;
+    background: rgba(13,31,60,0.4);
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0; margin-top: 60px;
+    position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute; top: 28px; left: 15%; right: 15%;
+    height: 1px; background: linear-gradient(90deg, transparent, var(--border), var(--border), transparent);
+  }
+  .step { text-align: center; padding: 0 20px; }
+  .step-num {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--navy); border: 1.5px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;
+    color: var(--accent); margin: 0 auto 20px;
+    position: relative; z-index: 2;
+  }
+  .step h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem; font-weight: 700; margin-bottom: 10px;
+  }
+  .step p { font-size: 0.85rem; color: var(--gray); line-height: 1.6; }
+
+  /* ─── ZONES ─── */
+  .zones { padding: 100px 5%; }
+  .zones-grid {
+    display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px;
+  }
+  .zone-tag {
+    padding: 10px 20px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 100px; font-size: 0.88rem; color: var(--gray);
+    transition: all 0.2s; cursor: default;
+  }
+  .zone-tag:hover, .zone-tag.active {
+    background: rgba(74,158,255,0.12);
+    border-color: rgba(74,158,255,0.4);
+    color: var(--accent);
+  }
+
+  /* ─── STATS ─── */
+  .stats {
+    padding: 80px 5%;
+    background: linear-gradient(135deg, rgba(26,58,107,0.4), rgba(10,22,40,0.8));
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 40px; text-align: center;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 3rem; font-weight: 800; color: var(--accent);
+    letter-spacing: -0.03em; line-height: 1;
+  }
+  .stat-label { font-size: 0.88rem; color: var(--gray); margin-top: 8px; }
+
+  /* ─── TESTIMONIALS ─── */
+  .testimonials { padding: 100px 5%; }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px; margin-top: 60px;
+  }
+  .testimonial {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 28px;
+    transition: border-color 0.3s;
+  }
+  .testimonial:hover { border-color: rgba(74,158,255,0.3); }
+  .stars-rating { color: #fbbf24; font-size: 0.9rem; margin-bottom: 14px; }
+  .testimonial blockquote {
+    font-size: 0.95rem; color: #c8d8f0; line-height: 1.7;
+    margin-bottom: 18px; font-style: italic;
+  }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--blue));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.85rem; color: var(--white);
+  }
+  .testimonial-author .name { font-weight: 600; font-size: 0.9rem; }
+  .testimonial-author .loc { font-size: 0.78rem; color: var(--gray); }
+
+  /* ─── GOOGLE RATING ─── */
+  .google-rating-block {
+    margin-top: 60px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 40px;
+    display: flex; flex-direction: column; align-items: center; gap: 32px;
+  }
+  .google-big-score {
+    display: flex; gap: 60px; align-items: center; flex-wrap: wrap; justify-content: center;
+  }
+  .google-score-left { text-align: center; }
+  .google-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 5rem; font-weight: 800; color: var(--white); line-height: 1;
+  }
+  .google-stars { color: #fbbf24; font-size: 1.4rem; margin: 6px 0; }
+  .google-count { font-size: 0.85rem; color: var(--gray); }
+  .google-score-right { display: flex; flex-direction: column; gap: 8px; min-width: 240px; }
+  .google-bar { display: flex; align-items: center; gap: 10px; }
+  .bar-label { font-size: 0.78rem; color: var(--gray); width: 22px; text-align: right; }
+  .bar-track {
+    flex: 1; height: 6px; background: rgba(255,255,255,0.08);
+    border-radius: 100px; overflow: hidden;
+  }
+  .bar-fill { height: 100%; background: #fbbf24; border-radius: 100px; }
+  .bar-pct { font-size: 0.75rem; color: var(--gray); width: 28px; }
+  .google-cta-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--white); color: #1a1a1a;
+    padding: 14px 28px; border-radius: 100px;
+    font-weight: 700; font-size: 0.95rem; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .google-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,255,255,0.15); }
+
+  /* ─── APP SECTION ─── */
+  .app-section {
+    padding: 100px 5%;
+    display: flex; align-items: center; gap: 60px; flex-wrap: wrap;
+    background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(26,58,107,0.35) 0%, transparent 70%);
+  }
+  .app-content { flex: 1; min-width: 280px; }
+  .app-content h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px;
+  }
+  .app-content p { color: var(--gray); line-height: 1.7; margin-bottom: 32px; }
+  .app-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+  .app-btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.07); border: 1px solid var(--border);
+    padding: 14px 22px; border-radius: 14px; color: var(--white);
+    text-decoration: none; transition: all 0.2s;
+  }
+  .app-btn:hover { background: rgba(74,158,255,0.1); border-color: rgba(74,158,255,0.4); }
+  .app-btn .app-icon { font-size: 1.6rem; }
+  .app-btn .app-text { line-height: 1.2; }
+  .app-btn .app-text small { font-size: 0.7rem; color: var(--gray); display: block; }
+  .app-btn .app-text strong { font-size: 0.95rem; font-weight: 600; }
+
+  .app-phone {
+    flex: 0 0 280px;
+    display: flex; justify-content: center;
+  }
+  .phone-mockup {
+    width: 240px; height: 480px;
+    background: rgba(13,31,60,0.8);
+    border: 1.5px solid var(--border);
+    border-radius: 36px; padding: 16px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 40px rgba(74,158,255,0.1);
+    position: relative; overflow: hidden;
+  }
+  .phone-mockup::before {
+    content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 26px; background: var(--navy);
+    border-radius: 0 0 16px 16px;
+  }
+  .phone-screen {
+    width: 100%; height: 100%; border-radius: 24px;
+    background: radial-gradient(ellipse at 50% 30%, rgba(74,158,255,0.2) 0%, var(--navy) 60%);
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 16px; padding: 20px;
+  }
+  .phone-planet {
+    width: 80px; height: 80px;
+    background: radial-gradient(circle at 38% 38%, #4a9eff, #1a3a6b 60%, #0a1628);
+    border-radius: 50%;
+    box-shadow: 0 0 30px rgba(74,158,255,0.5);
+    position: relative;
+  }
+  .phone-planet::after {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    width: 118px; height: 22px;
+    border: 2px solid rgba(126,200,255,0.6);
+    border-radius: 50%;
+  }
+  .phone-title {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;
+    text-align: center;
+  }
+  .phone-num { color: var(--accent); font-weight: 600; font-size: 0.85rem; }
+  .phone-btn {
+    background: var(--accent); color: var(--navy);
+    padding: 10px 24px; border-radius: 100px;
+    font-weight: 700; font-size: 0.85rem; width: 100%; text-align: center;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--deep);
+    border-top: 1px solid var(--border);
+    padding: 60px 5% 30px;
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px; margin-bottom: 50px;
+  }
+  .footer-brand p { font-size: 0.88rem; color: var(--gray); line-height: 1.7; margin-top: 14px; max-width: 280px; }
+  .footer-col h5 {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
+    margin-bottom: 16px; color: var(--white);
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a {
+    color: var(--gray); text-decoration: none; font-size: 0.88rem; transition: color 0.2s;
+  }
+  .footer-col ul li a:hover { color: var(--accent); }
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 24px; display: flex; justify-content: space-between;
+    align-items: center; flex-wrap: wrap; gap: 14px;
+  }
+  .footer-bottom p { font-size: 0.8rem; color: var(--gray); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(-50%) translateY(0); }
+    50% { transform: translateY(-50%) translateY(-12px); }
+  }
+  .booking-float { animation: float 4s ease-in-out infinite, fadeUp 0.7s 0.2s ease both; }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 900px) {
+    .booking-float { position: static; transform: none; animation: fadeUp 0.7s 0.4s ease both; width: 100%; margin-top: 40px; }
+    .hero { flex-direction: column; padding-top: 100px; padding-bottom: 60px; }
+    .nav-links { display: none; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .steps::before { display: none; }
+    .app-section { flex-direction: column; }
+    .app-phone { order: -1; }
+  }
+  @media (max-width: 480px) {
+    .footer-top { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 2.4rem; }
+  }
+</style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="fr"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;SpaceTaxi | Chauffeur Privé Fribourg &amp; International&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;link rel="stylesheet" href="style.css"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;nav&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="logo"&gt;Space&lt;span&gt;Taxi&lt;/span&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;ul class="nav-links"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;li&gt;&lt;a href="#accueil"&gt;Accueil&lt;/a&gt;&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;li&gt;&lt;a href="#services"&gt;Nos Services&lt;/a&gt;&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;li&gt;&lt;a href="#vehicule"&gt;Notre Tesla&lt;/a&gt;&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;li&gt;&lt;a href="#reservation"&gt;Réserver&lt;/a&gt;&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/ul&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/nav&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;header id="accueil" class="hero"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="hero-content"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h1&gt;De Fribourg vers toutes vos destinations&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;p&gt;Confort électrique, ponctualité et discrétion pour vos trajets locaux, transferts aéroports et courses internationales.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;a href="#reservation" class="btn"&gt;Réserver mon trajet&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;section id="services" class="services-section"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Où souhaitez-vous aller ?&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;p class="subtitle"&gt;Nous vous accompagnons partout, que ce soit pour un court trajet en ville ou un voyage à travers l'Europe.&lt;/p&gt;</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="services-grid"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="service-card"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;📍 Fribourg &amp; Canton&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Vos déplacements quotidiens, rendez-vous d'affaires, sorties au restaurant ou trajets vers les gares. Un service rapide et fiable dans toute la région fribourgeoise.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="service-card"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;✈️ Transferts Aéroports&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Commencez votre voyage sans stress. Nous assurons vos transferts vers et depuis les aéroports de Genève (GVA), Zurich (ZRH), Bâle-Mulhouse (BSL) ou même Milan.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="service-card"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;🌍 Suisse &amp; International&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Besoin de vous rendre en France, en Italie, en Allemagne ou ailleurs en Suisse ? Profitez du confort de notre Tesla pour vos longues distances, en toute sérénité.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;section id="vehicule" class="vehicule-section dark-bg"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Un confort haut de gamme &amp; écologique&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="vehicule-container"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="vehicule-texte"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;Prenez place à bord de notre Tesla Model Y&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Profitez d'un trajet silencieux et respectueux de l'environnement. Un espace de travail et de détente idéal pour les longues distances.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;ul&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;li&gt;✓ 100% Électrique et silencieux&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;li&gt;✓ Intérieur spacieux et toit panoramique&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;li&gt;✓ Grand coffre pour tous vos bagages&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;li&gt;✓ Conduite douce et sécurisée&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/ul&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="vehicule-image"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;img src="IMG_0631.jpeg" alt="Tesla SpaceTaxi Fribourg de face"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;section class="vehicule-section darker-bg"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="vehicule-container reverse-layout"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="vehicule-texte"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3&gt;Identifiable et Connecté&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;p&gt;Notre design "SpaceTaxi" vous permet de nous repérer facilement. Vous voyagez pour les affaires ? Profitez du calme pour travailler ou vous reposer sur la route.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;br&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;a href="SpaceTaxi_85x55mm_FRONT_HD.pdf" target="_blank" class="btn" style="padding: 10px 20px; font-size: 1rem; background-color: #333; color: #fff;"&gt;Voir notre carte de visite&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="vehicule-image"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;img src="IMG_0637.jpeg" alt="Tesla SpaceTaxi Fribourg arrière"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;section id="reservation" class="reservation-section"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Demande de Réservation&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;p class="subtitle"&gt;Remplissez ce formulaire pour planifier votre course. Nous vous confirmerons la faisabilité et le tarif au plus vite.&lt;/p&gt;</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;form action="VOTRE_LIEN_FORMSPREE" method="POST" class="booking-form"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="form-group"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;input type="text" name="Nom" placeholder="Votre Nom complet" required&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;input type="tel" name="Telephone" placeholder="Votre téléphone (ex: 079 801 22 42)" required&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="form-group"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;input type="text" name="Depart" placeholder="Adresse de départ (Ville ou code postal)" required&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;input type="text" name="Arrivee" placeholder="Adresse d'arrivée (Gare, Aéroport, Ville étrangère...)" required&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="form-group"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;input type="date" name="Date" required&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;input type="time" name="Heure" required&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="form-group"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;input type="number" name="Passagers" placeholder="Nombre de passagers" min="1" max="4" required&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;textarea name="Message" rows="4" placeholder="Précisions utiles (Nombre de gros bagages, numéro de vol, besoins particuliers...)"&gt;&lt;/textarea&gt;</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;button type="submit" class="btn"&gt;Envoyer ma demande&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/form&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;footer&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;p&gt;&amp;copy; 2026 SpaceTaxi. Tous droits réservés.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;p&gt;Téléphone : 079 801 22 42 | Basé à Fribourg, disponible pour l'Europe&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/footer&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+
+<div class="stars"></div>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-logo">
+    <div class="planet-icon"></div>
+    <span>SpaceTaxi</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#comment">Comment ça marche</a></li>
+    <li><a href="#zones">Zones</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="tel:0798012242" class="nav-cta">📞 079 801 22 42</a>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Disponible 24h/24 · Fribourg & région</div>
+    <h1>Votre taxi,<br><span>en orbite.</span></h1>
+    <p>Rapide, fiable et confortable. SpaceTaxi vous emmène partout dans Fribourg et sa région — aéroport, gare, événements, courses médicales.</p>
+    <div class="hero-actions">
+      <a href="tel:0798012242" class="btn-primary">🚀 Réserver maintenant</a>
+      <a href="#services" class="btn-secondary">Voir les services →</a>
+    </div>
+  </div>
+
+  <div class="booking-float">
+    <div class="booking-card">
+      <h3>✦ Demande de course</h3>
+      <div class="field-group">
+        <label>Adresse de départ</label>
+        <input type="text" placeholder="Ex: Gare de Fribourg">
+      </div>
+      <div class="field-group">
+        <label>Destination</label>
+        <input type="text" placeholder="Ex: Aéroport de Genève">
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Date</label>
+          <input type="date">
+        </div>
+        <div class="field-group">
+          <label>Heure</label>
+          <input type="time">
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Type de véhicule</label>
+        <select>
+          <option>Tesla Model Y</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Votre numéro</label>
+        <input type="tel" placeholder="079 000 00 00">
+      </div>
+      <button class="btn-primary" onclick="window.location='tel:0798012242'">
+        🚀 Confirmer la course
+      </button>
+      <div class="price-estimate">
+        <span>Estimation tarifaire</span>
+        <strong>Sur demande</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PHONE STRIP ─── -->
+<div class="phone-strip">
+  <span class="label">Réservation directe</span>
+  <a href="tel:0798012242">079 801 22 42</a>
+  <div class="available">
+    <span class="dot-green"></span>
+    Disponible maintenant
+  </div>
+</div>
+
+<!-- ─── SERVICES ─── -->
+<section class="services" id="services">
+  <div class="section-label">Nos services</div>
+  <h2 class="section-title">Tout ce dont vous<br>avez besoin</h2>
+  <p class="section-sub">De la course locale au transfert aéroport, SpaceTaxi s'adapte à chaque besoin avec professionnalisme.</p>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">✈️</div>
+      <h4>Transferts aéroport</h4>
+      <p>Genève, Zurich, Bâle. On suit votre vol en temps réel pour une prise en charge parfaite.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🚉</div>
+      <h4>Gare & trains</h4>
+      <p>Arrivée ou départ depuis la gare de Fribourg. Ponctuel, sans stress.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏥</div>
+      <h4>Courses médicales</h4>
+      <p>Hôpital cantonal, cliniques, rendez-vous médicaux. Conduite douce et accompagnement soigné.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎉</div>
+      <h4>Événements & sorties</h4>
+      <p>Mariage, soirée, conférence. Rentrez en toute sécurité après vos fêtes.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">👔</div>
+      <h4>Affaires & corporate</h4>
+      <p>Mise à disposition avec chauffeur pour vos déplacements professionnels.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🌙</div>
+      <h4>Service 24h/24</h4>
+      <p>Disponible jour et nuit, week-ends et jours fériés inclus. Toujours là quand vous avez besoin.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── HOW IT WORKS ─── -->
+<section class="how" id="comment">
+  <div style="max-width:600px">
+    <div class="section-label">Comment ça marche</div>
+    <h2 class="section-title">3 étapes,<br>c'est tout.</h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h4>Appelez ou réservez</h4>
+      <p>Par téléphone, WhatsApp ou via ce site. Indiquez votre adresse et horaire.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h4>Confirmation immédiate</h4>
+      <p>Vous recevez une confirmation et le numéro de votre chauffeur.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h4>À bord !</h4>
+      <p>Votre chauffeur vous attend à l'heure convenue. Voyage confortable garanti.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STATS ─── -->
+<section class="stats">
+  <div class="stats-grid">
+    <div>
+      <div class="stat-num">2000+</div>
+      <div class="stat-label">Courses réalisées</div>
+    </div>
+    <div>
+      <div class="stat-num">24/7</div>
+      <div class="stat-label">Disponibilité</div>
+    </div>
+    <div>
+      <div class="stat-num">5.0★</div>
+      <div class="stat-label">Note Google (37 avis)</div>
+    </div>
+    <div>
+      <div class="stat-num">15 min</div>
+      <div class="stat-label">Temps d'attente moyen</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ZONES ─── -->
+<section class="zones" id="zones">
+  <div class="section-label">Zones desservies</div>
+  <h2 class="section-title">Fribourg et bien<br>au-delà</h2>
+  <p class="section-sub">SpaceTaxi opère dans toute l'agglomération fribourgeoise et effectue des transferts longue distance.</p>
+  <div class="zones-grid">
+    <div class="zone-tag active">📍 Fribourg (ville)</div>
+    <div class="zone-tag">Bulle</div>
+    <div class="zone-tag">Romont</div>
+    <div class="zone-tag">Murten / Morat</div>
+    <div class="zone-tag">Villars-sur-Glâne</div>
+    <div class="zone-tag">Givisiez</div>
+    <div class="zone-tag">Marly</div>
+    <div class="zone-tag">Düdingen</div>
+    <div class="zone-tag">Berne</div>
+    <div class="zone-tag">Lausanne</div>
+    <div class="zone-tag">Genève ✈️</div>
+    <div class="zone-tag">Zurich ✈️</div>
+    <div class="zone-tag">Bâle ✈️</div>
+    <div class="zone-tag">Interlaken</div>
+    <div class="zone-tag">+ toute la Suisse</div>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIALS ─── -->
+<section class="testimonials">
+  <div class="section-label">Avis clients</div>
+  <h2 class="section-title">Ils nous font confiance</h2>
+
+  <div class="google-rating-block">
+    <div class="google-big-score">
+      <div class="google-score-left">
+        <div class="google-num">5.0</div>
+        <div class="google-stars">★★★★★</div>
+        <div class="google-count">37 avis Google</div>
+      </div>
+      <div class="google-score-right">
+        <div class="google-bar"><span class="bar-label">5★</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-pct">100%</span></div>
+        <div class="google-bar"><span class="bar-label">4★</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-pct">0%</span></div>
+        <div class="google-bar"><span class="bar-label">3★</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-pct">0%</span></div>
+        <div class="google-bar"><span class="bar-label">2★</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-pct">0%</span></div>
+        <div class="google-bar"><span class="bar-label">1★</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-pct">0%</span></div>
+      </div>
+    </div>
+    <a href="https://maps.app.goo.gl/B7uMpwNcdDWLcPnEA" target="_blank" class="google-cta-btn">
+      <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 2.9l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z" fill="#FFC107"/><path d="M6.3 14.7l6.6 4.8C14.5 16.1 19 13 24 13c3.1 0 5.8 1.1 8 2.9l5.7-5.7C34.5 6.5 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" fill="#FF3D00"/><path d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.1 35.5 26.6 36 24 36c-5.2 0-9.6-3.3-11.3-8H6.3C9.7 35.6 16.3 44 24 44z" fill="#4CAF50"/><path d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37.2 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z" fill="#1976D2"/></svg>
+      Voir tous les avis sur Google
+    </a>
+  </div>
+</section>
+
+<!-- ─── APP SECTION ─── -->
+<section class="app-section" id="contact">
+  <div class="app-content">
+    <div class="section-label">Réserver facilement</div>
+    <h2>Via WhatsApp<br>ou par téléphone</h2>
+    <p>Pas d'app à télécharger. Contactez-nous directement sur WhatsApp ou par appel — réponse garantie en quelques minutes.</p>
+    <div class="app-buttons">
+      <a href="https://wa.me/41798012242" class="app-btn">
+        <span class="app-icon">💬</span>
+        <div class="app-text">
+          <small>Écrire sur</small>
+          <strong>WhatsApp</strong>
+        </div>
+      </a>
+      <a href="tel:0798012242" class="app-btn">
+        <span class="app-icon">📞</span>
+        <div class="app-text">
+          <small>Appeler directement</small>
+          <strong>079 801 22 42</strong>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="app-phone">
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="phone-planet"></div>
+        <div class="phone-title">SpaceTaxi<br>Fribourg</div>
+        <div class="phone-num">079 801 22 42</div>
+        <div class="phone-btn">🚀 Réserver</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="nav-logo">
+        <div class="planet-icon"></div>
+        <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem">SpaceTaxi</span>
+      </div>
+      <p>Votre service de taxi de confiance à Fribourg. Disponible 24h/24, 7j/7 pour tous vos déplacements.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Services</h5>
+      <ul>
+        <li><a href="#">Transferts aéroport</a></li>
+        <li><a href="#">Courses médicales</a></li>
+        <li><a href="#">Événements</a></li>
+        <li><a href="#">Corporate</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Zones</h5>
+      <ul>
+        <li><a href="#">Fribourg</a></li>
+        <li><a href="#">Bulle</a></li>
+        <li><a href="#">Berne</a></li>
+        <li><a href="#">Genève</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="tel:0798012242">079 801 22 42</a></li>
+        <li><a href="https://wa.me/41798012242">WhatsApp</a></li>
+        <li><a href="#">Rte de Chantemerle 25, 1763 Granges-Paccot</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 SpaceTaxi Fribourg. Tous droits réservés.</p>
+    <p style="color:var(--gray);font-size:0.8rem">Conçu avec ✦ pour Fribourg</p>
+  </div>
+</footer>
+
 </body>
 </html>
